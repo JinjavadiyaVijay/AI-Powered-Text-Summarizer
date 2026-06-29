@@ -1,0 +1,20 @@
+# Model checkpoints
+results/
+saved_summary_model/
+
+# Hugging Face cache
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
