@@ -1,9 +1,9 @@
 # fast api
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
-from transformers import T5forConditionalGeneration,T5Tokenizer
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 from fastapi.templating import Jinja2Templates #ui
-from fastapi.response import HTMLResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import re
 import torch 
@@ -12,8 +12,8 @@ import torch
 app = FastAPI(title="Text Summarizer App", description="Text Summarization using T5",version= "1.0")
 
 # model & tokenizer
-model = T5forConditionalGeneration.from_pretrained("./saved_summary_model")
-Tokenizer = T5forConditionalGeneration.from_pretrained("./seved_summary_model")
+model = T5ForConditionalGeneration.from_pretrained("./saved_summary_model")
+tokenizer = T5Tokenizer.from_pretrained("./saved_summary_model")
 
 # device
 if torch.backends.mps.is_available():
@@ -74,9 +74,13 @@ def summarize_dialogue(dialogue):
  # API Endpoints
 @app.post("/summarize/")
 async def summarize(dialogue_input: DialogueInput):
-    summarize_dialogue(dialogue_input.dialogue)
-    return {"summary":Summary}
+    summary = summarize_dialogue(dialogue_input.dialogue)
+    return {"summary":summary}
 
 @app.get("/",response_class = HTMLResponse)
 async def create_item(request :Request ):
-    return templates.TemplateResponse("index.html",{"request":request})
+    return templates.TemplateResponse(
+    request=request,
+    name="index.html",
+    context={}
+    )
